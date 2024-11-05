@@ -4,8 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// TODO: ListHelmTemplates godoc
-func ListHelmTemplates(c *gin.Context) {
+func UpdateApplicationTemplate(c *gin.Context) {
 	var helmTemplateList = []struct {
 		Name        string `json:"name"`
 		Description string `json:"description"`

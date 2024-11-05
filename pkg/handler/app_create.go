@@ -80,7 +80,7 @@ type Application struct {
 	WaitTimeout string `json:"wait-timeout"`
 }
 
-func CreateApplication(c *gin.Context) {
+func CreateArgoApplication(c *gin.Context) {
 	var createAppReq Application
 	if err := c.BindJSON(&createAppReq); err != nil {
 		c.JSON(400, gin.H{"error": "Invalid request body: " + err.Error()})

@@ -54,7 +54,7 @@ type AppDetailResponse struct {
 	SyncStatus    string          `json:"sync_status"`
 }
 
-func ListApplications(c *gin.Context) {
+func ListArgoApplications(c *gin.Context) {
 	var project string
 	if c.Query("project") != "" {
 		project = c.Query("project")

@@ -53,24 +53,45 @@ func runServer(cmd *cobra.Command, args []string) {
 	r := gin.Default()
 
 	v1 := r.Group("/api/v1")
-	// helm template
+	// deploy/DestinationCluster
 	{
-		v1.POST("helm/templates", handler.CreateHelmTemplate)
-		v1.GET("helm/templates", handler.ListHelmTemplates)
+		v1.GET("destinationCluster", handler.ListDestinationCluster)
+		v1.POST("destinationCluster", handler.CreateDestinationCluster)
+		v1.PATCH("destinationCluster/:name", handler.UpdateDestinationCluster)
 	}
-	// application
+
+	// deploy/application template (only kustomization)
 	{
-		v1.POST("/applications", handler.CreateApplication)
-		v1.GET("/applications", handler.ListApplications)
-		v1.GET("/applications/:appName", handler.ListApplications)  // TODO
-		v1.PUT("/applications/:appName", handler.UpdateApplication) // TODO
-		v1.DELETE("/applications", handler.DeleteApplication)
+		v1.POST("applications/template", handler.CreateApplicationTemplate)
+		v1.GET("applications/templates", handler.ListApplicationTemplate)
+		v1.PATCH("applications/templates", handler.UpdateApplicationTemplate)
+		v1.POST("applications/templates", handler.VlidateApplicationTemplate)
 	}
-	// project
+	// deploy/argoapplication
 	{
-		v1.POST("/projects", handler.CreateProject)
-		v1.GET("/projects", handler.ListProjects)
-		v1.DELETE("/projects", handler.DeleteProject)
+		// group operator
+		v1.POST("deploy/applications", handler.CreateArgoApplication)
+		v1.GET("deploy/applications", handler.ListArgoApplications)
+
+		// dry run
+		v1.POST("deploy/argo/applications/dryrun", handler.DryRunArgoApplications)
+
+		// one application operator
+		v1.GET("deploy/argo/applications/:appName", handler.DescribeArgoApplications) // TODO
+		v1.PUT("deploy/argo/applications/:appName", handler.UpdateArgoApplication)    // TODO
+		v1.DELETE("deploy/argo/applications/:appName", handler.DeleteArgoApplication)
+		v1.POST("deploy/argo/applications/:appName/sync", handler.DryRunArgoApplications)
+		// project === tenant
+		{
+			v1.POST("/projects", handler.CreateProject)
+			v1.GET("/projects", handler.ListProjects)
+			v1.DELETE("/projects", handler.DeleteProject)
+		}
+	}
+	// security
+	{
+		v1.POST("security/externalsecrets/secretstore", handler.CreateSecretStore)
+		v1.GET("security/externalsecrets/secretstore", handler.ListSecretStore)
 	}
 	r.GET("/healthz", handler.Healthz)
 

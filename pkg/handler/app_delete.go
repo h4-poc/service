@@ -23,7 +23,7 @@ type AppDeleteOptions struct {
 }
 
 // DELETE http://localhost:8080/api/v1/applications?project=testing&app=demo1
-func DeleteApplication(c *gin.Context) {
+func DeleteArgoApplication(c *gin.Context) {
 	projectName := c.Query("project")
 	appName := c.Query("app")
 
